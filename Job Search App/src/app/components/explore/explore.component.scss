@@ -1,0 +1,279 @@
+@import "~src/styles/vars.scss";
+@import "~src/styles/mixins.scss";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.processing-overlay {
+  position: fixed; /* Sit on top of the page content */
+  display: block; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+}
+
+.processing {
+  position: absolute;
+  top: 20%;
+  right: 0;
+  left: 0;
+  text-align: center;
+  color: white;
+}
+
+.info {
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.banner {
+  // background-image: url("/assets/common//navigator/banners/bi_nso.jpg");
+  background-position: right;
+  background-size: cover;
+  height: 180px;
+  width: 100%;
+}
+
+.banner-description {
+  padding: 0 $size-xl;
+  margin: 0 16px;
+
+  @media only screen and (max-width: 368px) {
+    padding: 0 $size-m;
+    margin: 0 8px;
+  }
+  h2 {
+    font-weight: 900;
+  }
+}
+
+.search_field {
+  width: 50%;
+  font-family: "Montserrat", "Roboto";
+  button {
+    border: none;
+    background: none;
+    color: white;
+  }
+  mat-icon {
+    font-size: 24px;
+  }
+  @include breakpoint-xs {
+    width: 59%;
+  }
+
+  @media only screen and (max-width: 400px) {
+    width: 70%;
+  }
+
+  @media only screen and (max-width: 360px) {
+    width: 80%;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.result {
+  align-items: baseline;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  margin-left: 48px;
+  margin-right:24px;
+
+
+    @media only screen and (max-width: 1305px) {
+      margin-left: 96px;
+        margin-right:32px;
+
+    }
+
+
+  @media only screen and (max-width: 810px) {
+    display: grid;
+    grid-row-gap: 12px;
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+
+
+}
+
+.option-container {
+  align-items: baseline;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  margin-right: 24px;
+
+  @media only screen and (max-width: 1305px) {
+      margin-right: 48px;
+    }
+
+  @media only screen and (max-width: 498px) {
+    display: grid;
+    grid-row-gap: 12px;
+    font-size: 0.92rem;
+  }
+}
+
+.no-data {
+  margin-top: 40px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  p {
+    font-size: 2rem;
+  }
+
+  img {
+    height: 300px;
+  }
+  @media only screen and (max-width: 952px) {
+    flex-direction: column;
+
+    img {
+      margin-top: 32px;
+    }
+  }
+  @media only screen and (max-width: 518px) {
+    p {
+      font-size: 1.8rem;
+    }
+  }
+}
+// Contents of SideNav Menu
+.sidenav {
+  width: 20%;
+  min-width: 250px;
+  // padding-left: $size-m;
+  background: inherit;
+  box-shadow: none;
+  // margin-bottom: 32px;
+}
+
+// Contents of Side Nav Content
+.sidenav-content {
+  margin: 0;
+  padding: 0 $size-m $size-l;
+  box-sizing: border-box;
+  min-height: calc(100vh);
+}
+
+.normal-button {
+  border-radius: 50%;
+  height: 40px;
+  display: flex;
+  width: 40px;
+  z-index: 3;
+  justify-content: center;
+  outline: none;
+  cursor: pointer;
+  transition: 0.5s;
+  background: none;
+  border: 2px solid #3f51b5;
+
+  mat-icon {
+    color: #3f51b5;
+    transition: 0.5s;
+  }
+}
+
+.normal-button:hover {
+  mat-icon {
+    color: #00a877 !important;
+  }
+}
+
+.margin-left4 {
+  margin-left: 4rem;
+}
+
+.margin-up4 {
+  margin-top: 6rem;
+}
+
+.margin-right6 {
+  margin-right: 5rem;
+}
+
+.flex-between {
+  justify-content: space-between;
+}
+
+.flex-end {
+  justify-content: flex-end !important;
+}
+
+.page-button {
+  width: 42px;
+  height: 42px;
+  margin: 8px 8px;
+  cursor: pointer;
+  background: none;
+  outline: none;
+  border: 2px solid #3f51b5;
+  // border: none;
+  transition: 0.4s;
+}
+
+.page-button:hover {
+  background: #3f51b5;
+  color: #fff;
+}
+
+.loading-image {
+  margin-top: 32px;
+  width: 400px;
+  height: 300px;
+
+  @media only screen and (max-width: 920px) {
+    margin-top: px;
+  }
+
+  @media only screen and (max-width: 650px) {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+.large-button {
+  margin-top: 6px;
+  width: 24px;
+  font-size: 24px;
+  height: 24px;
+  transition: 100ms linear;
+  outline: none;
+  background: none;
+}
+
+.tree-open {
+  transform: rotate(-90deg);
+}
+
+.tree-toggle {
+  animation: collapsible 0.4s linear 1;
+}
+
+@keyframes collapsible {
+  from {
+    transform: translateY(-10px);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}

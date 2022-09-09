@@ -1,0 +1,267 @@
+<div class="processing-overlay" *ngIf="processing">
+  <div class="processing">
+    <p
+      class="info font-weight-500 margin-remove-bottom padding-left-m padding-right-m in-up"
+    >
+      Please wait, we are fetching awesome jobs for you!
+    </p>
+    <span class="line-hover-right"></span>
+    <img class="in-up loading-image " src="./assets/banners/loading.svg" />
+    <span class="line-hover"></span>
+  </div>
+</div>
+<mat-sidenav-container class="sidenav-container" autosize>
+  <mat-sidenav
+    #sideNavBar
+    class="sidenav"
+    [opened]="sideNavBarOpened"
+    [mode]="screenSizeIsLtMedium ? 'over' : 'side'"
+  >
+    <div class="">
+      <div class=" mat-primary-lite-background">
+        <div
+          class="flex flex-middle flex-between padding-top-l padding-bottom-l padding-left-l padding-right-xl"
+        >
+          <p class="margin-remove-bottom margin-top-xs font-weight-500 mat-h1">
+            Filters
+          </p>
+          <button
+            class="normal-button margin-top-xxs"
+            (click)="toggleSidebar()"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="margin-top-xl padding-left-l">
+        <div class="flex flex-between">
+          <p class="font-weight-bold mat-primary-text mat-h2">Location</p>
+          <mat-icon
+            class="mat-primary-text large-button margin-right6 cursor-pointer"
+            [ngClass]="{ 'tree-open': collapseLocation }"
+            (click)="toggleTree()"
+            >keyboard_arrow_down</mat-icon
+          >
+        </div>
+        <ng-container *ngIf="!collapseLocation">
+          <mat-checkbox
+            *ngFor="let location of locations"
+            class="flex flex-column margin-top-xxs tree-toggle"
+            (change)="locationToggle($event, location)"
+            [checked]="locationsInList(location)"
+          >
+            <span class="flex">
+              <span class="mat-h4 margin-remove-bottom ">
+                {{ location }}
+              </span>
+            </span>
+          </mat-checkbox>
+        </ng-container>
+        <div class="flex flex-between">
+          <p class="font-weight-bold mat-primary-text mat-h2">Experience</p>
+          <mat-icon
+            class="mat-primary-text large-button margin-right6 cursor-pointer"
+            [ngClass]="{ 'tree-open': collaspseExperience }"
+            (click)="toggleExperienceTree()"
+            >keyboard_arrow_down</mat-icon
+          >
+        </div>
+        <ng-container *ngIf="!collaspseExperience">
+          <mat-checkbox
+            *ngFor="let experience of experiences"
+            class="flex flex-column margin-top-xxs tree-toggle"
+            (change)="experienceToggle($event, experience)"
+            [checked]="experiencesInList(experience)"
+          >
+            <span class="flex">
+              <span class="mat-h4 margin-remove-bottom ">
+                {{ experience }}
+              </span>
+            </span>
+          </mat-checkbox>
+        </ng-container>
+      </div>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <ng-container *ngIf="!processing">
+      <div
+        class="margin-top-xl margin-bottom-xl margin-left-responsive margin-right-responsive"
+      >
+        <div class="margin-top-l text-center">
+          <form [formGroup]="searchForm" (ngSubmit)="onSubmit()">
+            <mat-form-field
+              appearance="outline"
+              class="search_field"
+              #searchfield
+            >
+              <mat-label>Search for a Job Profile</mat-label>
+
+              <input
+                matInput
+                placeholder="Ex: Mobile developer"
+                formControlName="search"
+                autocomplete="off"
+              />
+              <button matSuffix type="submit">
+                <mat-icon
+                  aria-hidden="false"
+                  color="primary"
+                  aria-label="Search"
+                  >search</mat-icon
+                >
+              </button>
+            </mat-form-field>
+          </form>
+        </div>
+        <div
+          class="result"
+          *ngIf="!noData"
+          [ngClass]="{ 'flex-end': sideNavBarOpened }"
+        >
+          <div
+            class="flex flex-middle"
+            *ngIf="!sideNavBarOpened"
+          >
+            <p class="margin-remove-bottom margin-top-xxs">Show Filters</p>
+            <mat-icon
+              class="mat-primary-text margin-left-xxs cursor-pointer"
+              (click)="toggleSidebar()"
+              >filter_list</mat-icon
+            >
+            <mat-chip-list class="margin-left-s">
+              <ng-container *ngFor="let location of selectedLocations">
+                <mat-chip
+                  class="mat-chips padding-left-m padding-right-m"
+                  color="primary"
+                  selected
+                >
+                  {{ location }}
+                  <mat-icon matChipRemove (click)="removeLocations(location)"
+                    >cancel</mat-icon
+                  >
+                </mat-chip>
+              </ng-container>
+            </mat-chip-list>
+            <mat-chip-list class="margin-left-s">
+              <ng-container *ngFor="let experience of selectedExperiences">
+                <mat-chip
+                  class="mat-chips padding-left-m padding-right-m"
+                  color="primary"
+                  selected
+                >
+                  {{ experience }}
+                  <mat-icon
+                    matChipRemove
+                    (click)="removeExperiencess(experience)"
+                    >cancel</mat-icon
+                  >
+                </mat-chip>
+              </ng-container>
+            </mat-chip-list>
+          </div>
+          <div class="option-container" *ngIf="!errorData">
+            <p class="margin-remove-bottom margin-right-m">
+              Showing {{ this.jobs.length }} results out of
+              <ng-container *ngIf="searchQuery === '' && !filtersApplied">{{
+                allJobs.length
+              }}</ng-container>
+              <ng-container *ngIf="searchQuery !== '' && !filtersApplied">{{
+                searchJobs.length
+              }}</ng-container>
+              <ng-container *ngIf="filtersApplied">{{
+                filterJobs.length
+              }}</ng-container>
+            </p>
+            <form [formGroup]="optionForm">
+              <mat-form-field appearance="outline">
+                <mat-label>Select a value</mat-label>
+                <mat-select
+                  (selectionChange)="optionChanged($event.value)"
+                  value="pagination"
+                >
+                  <mat-option value="30">30</mat-option>
+                  <mat-option value="50">50</mat-option>
+                  <mat-option value="80">80</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </form>
+          </div>
+        </div>
+        <div class=" no-data" *ngIf="noData">
+          <p class="mat-h1 mat-primary-text secondayyTypography margin-up4">
+            Please check the job profile entered
+          </p>
+          <img class="in-left " src="./assets/banners/no-data.svg" />
+        </div>
+        <div class=" no-data" *ngIf="noSearchResult">
+          <p class="mat-h1 mat-primary-text secondayyTypography margin-up4">
+            No data for the search
+          </p>
+          <img class="in-left " src="./assets/banners/no-result.svg" />
+        </div>
+        <div class=" no-data" *ngIf="errorData">
+          <p class="mat-h1 mat-primary-text secondayyTypography margin-up4">
+            Check your internet connection or try after a while
+          </p>
+          <img class="in-left " src="./assets/banners/server.svg" />
+        </div>
+        <div class="container">
+          <ng-container *ngIf="!noData">
+            <app-job-card
+              *ngFor="let job of jobs"
+              [jobData]="job"
+            ></app-job-card>
+          </ng-container>
+        </div>
+        <ng-container *ngIf="!errorData">
+          <app-horizontal-scroll>
+            <div class="flex justify-center">
+              <ng-container *ngIf="searchQuery === ''">
+                <button
+                  class="page-button padding-xs"
+                  *ngFor="let page of pages"
+                  [ngClass]="{
+                    'mat-accent-text mat-accent-text text-bold accent-border':
+                      page === selectedPage
+                  }"
+                  (click)="pageChanged(page)"
+                >
+                  <p class="margin-remove-bottom margin-remove-top mat-h3">
+                    {{ page }}
+                  </p>
+                </button>
+              </ng-container>
+              <ng-container *ngIf="searchQuery !== '' && !filtersApplied">
+                <button
+                  class="page-button padding-xs"
+                  *ngFor="let page of pages"
+                  [ngClass]="{
+                    'mat-accent-text mat-accent-text text-bold accent-border':
+                      page === selectedPage
+                  }"
+                  (click)="pageChanged(page)"
+                >
+                  {{ page }}
+                </button>
+              </ng-container>
+              <ng-container *ngIf="searchQuery !== '' && filtersApplied">
+                <button
+                  class="page-button padding-xs"
+                  *ngFor="let page of pages"
+                  [ngClass]="{
+                    'mat-accent-text mat-accent-text text-bold accent-border':
+                      page === selectedPage
+                  }"
+                  (click)="pageChanged(page)"
+                >
+                  {{ page }}
+                </button>
+              </ng-container>
+            </div>
+          </app-horizontal-scroll>
+        </ng-container>
+      </div>
+    </ng-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>
